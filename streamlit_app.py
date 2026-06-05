@@ -228,7 +228,7 @@ else:
     market = "MacBook Pro 16 / Razer Blade"
 
 # ==========================================
-# 13. CHATBOT INTELLIGENT (VERSION AMÉLIORÉE)
+# 13. CHATBOT INTELLIGENT
 # ==========================================
 def smart_chatbot(question, ram, cpu, performance, price_eur, category, weight):
     """Chatbot intelligent - Version complète avec recommandations"""
@@ -458,8 +458,8 @@ with col_right:
             with st.chat_message("user"):
                 st.write(user_question)
             
-            # Générer réponse
-            response = smart_chatbot(user_question, ram, cpu, performance, price_eur, category)
+            # Générer réponse - CORRIGÉ avec weight
+            response = smart_chatbot(user_question, ram, cpu, performance, price_eur, category, weight)
             
             # Ajouter réponse
             st.session_state.messages.append({"role": "assistant", "content": response})

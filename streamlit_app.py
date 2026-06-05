@@ -228,50 +228,105 @@ else:
     market = "MacBook Pro 16 / Razer Blade"
 
 # ==========================================
-# 13. CHATBOT INTELLIGENT
+# 13. CHATBOT INTELLIGENT (VERSION AMÉLIORÉE)
 # ==========================================
-def smart_chatbot(question, ram, cpu, performance, price_eur, category):
-    """Chatbot intelligent qui répond aux questions sur la configuration"""
+def smart_chatbot(question, ram, cpu, performance, price_eur, category, weight):
+    """Chatbot intelligent - Version complète avec recommandations"""
     question = question.lower()
     
-    # Dictionnaire des réponses
-    reponses = {
-        "ram": f"💾 **RAM** : {ram} Go. " + (
+    # === QUESTIONS ÉTUDIANTS ===
+    if "étudiant" in question or "etudiant" in question:
+        return f"""🎓 **Pour un étudiant, voici mes recommandations :**
+
+**Configuration idéale :**
+• RAM : 8-16 Go
+• CPU : 2.5-3.0 GHz  
+• Poids : < 1.8 kg
+• Budget : 500-800€
+
+**💡 Votre config actuelle :** 
+{price_eur:.0f}€ ({category})
+
+**Alternatives selon budget :**
+• 400-600€ : Lenovo IdeaPad, HP Pavilion
+• 600-800€ : Dell Inspiron, Acer Swift
+• 800€+ : MacBook Air, Dell XPS"""
+    
+    # === FOURCHETTE DE PRIX ===
+    elif "prix varie" in question or "fourchette" in question or "combien à combien" in question:
+        return f"""💰 **Fourchette de prix des PC portables :**
+
+| Catégorie | Prix |
+|-----------|------|
+| 📱 Entrée de gamme | 300€ - 500€ |
+| 💻 Milieu de gamme | 500€ - 1000€ |
+| ⚡ Haut de gamme | 1000€ - 1800€ |
+| 💎 Premium | 1800€ - 3500€+ |
+
+📌 **Votre PC :** {price_eur:.0f}€ → {category}"""
+    
+    # === PRIX MOYEN ===
+    elif "prix moyen" in question or "moyenne des prix" in question:
+        return f"""📊 **Prix moyen par catégorie d'usage :**
+
+| Usage | Prix moyen |
+|-------|------------|
+| 🎓 Étudiant | ~550€ |
+| 💼 Bureautique | ~700€ |
+| 🎮 Gaming | ~1300€ |
+| 🎨 Création | ~1800€ |
+| 💎 Premium | ~2500€ |
+
+💡 **Votre PC :** {price_eur:.0f}€ → {'En dessous de la moyenne étudiante (bon plan !)' if price_eur < 550 else 'Dans la moyenne' if price_eur < 800 else 'Au-dessus de la moyenne'}"""
+    
+    # === RECOMMANDATION PAR BUDGET ===
+    elif "budget" in question and ("recommand" in question or "conseil" in question or "quoi" in question):
+        if "300" in question or "400" in question:
+            return "💶 **Budget 300-500€ :**\n• Lenovo IdeaPad\n• HP Pavilion\n• Acer Aspire\n✅ Idéal pour bureautique et navigation"
+        elif "500" in question or "600" in question or "700" in question:
+            return "💶 **Budget 500-800€ :**\n• Dell Inspiron\n• Asus Vivobook\n• Honor MagicBook\n✅ Parfait pour étudiants"
+        elif "800" in question or "900" in question or "1000" in question:
+            return "💶 **Budget 800-1200€ :**\n• MacBook Air\n• Dell XPS 13\n• Lenovo Yoga\n✅ Idéal pour polyvalence"
+        else:
+            return "💶 **Selon votre budget :**\n• 300-500€ : Entrée gamme\n• 500-800€ : Milieu gamme\n• 800-1200€ : Haut gamme\n• 1200€+ : Premium"
+    
+    # === RAM ===
+    elif "ram" in question or "mémoire" in question:
+        return f"💾 **RAM** : {ram} Go. " + (
             "C'est parfait pour du multitâche et le gaming !" if ram >= 16 else
             "C'est bien pour un usage basique. Pour du gaming, passez à 16 Go." if ram >= 8 else
             "C'est un peu juste. Je recommande au moins 8 Go."
-        ),
-        "cpu": f"⚡ **CPU** : {cpu} GHz. " + (
+        )
+    
+    # === CPU ===
+    elif "cpu" in question or "processeur" in question:
+        return f"⚡ **CPU** : {cpu} GHz. " + (
             "Excellent pour les tâches exigeantes !" if cpu >= 3.5 else
             "Bon équilibre pour un usage polyvalent." if cpu >= 2.5 else
             "Suffisant pour la bureautique, mais limité pour le gaming."
-        ),
-        "poids": f"⚖️ **Poids** : {weight} kg. " + (
+        )
+    
+    # === POIDS ===
+    elif "poids" in question:
+        return f"⚖️ **Poids** : {weight} kg. " + (
             "Ultraportable ! Facile à transporter." if weight < 1.5 else
             "Poids standard, bon compromis." if weight < 2.2 else
             "Assez lourd, plutôt pour un usage fixe."
-        ),
-        "performance": f"📊 **Score** : {performance}/100. " + (
+        )
+    
+    # === PERFORMANCE ===
+    elif "performance" in question or "perf" in question:
+        return f"📊 **Score** : {performance}/100. " + (
             "Machine très puissante !" if performance >= 70 else
             "Bonnes performances pour un usage quotidien." if performance >= 40 else
             "Conçue pour les tâches essentielles."
-        ),
-        "prix": f"💰 **Prix** : {price_eur:,.0f} €. Catégorie : {category}.",
-    }
+        )
     
-    # Mots-clés et réponses
-    if "ram" in question or "mémoire" in question:
-        return reponses["ram"]
-    elif "cpu" in question or "processeur" in question:
-        return reponses["cpu"]
-    elif "poids" in question:
-        return reponses["poids"]
-    elif "performance" in question or "perf" in question:
-        return reponses["performance"]
-    elif "prix" in question or "budget" in question or "coût" in question or "euro" in question:
-        return reponses["prix"]
+    # === PRIX SIMPLE ===
+    elif "prix" in question and len(question.split()) < 5:
+        return f"💰 **Prix** : {price_eur:,.0f} €. Catégorie : {category}."
     
-    # Recommandations personnalisées
+    # === RECOMMANDATIONS POUR AMÉLIORER ===
     elif "recommandation" in question or "conseil" in question or "améliorer" in question:
         suggestions = []
         if ram < 16:
@@ -286,31 +341,42 @@ def smart_chatbot(question, ram, cpu, performance, price_eur, category):
         else:
             return "⭐ **Excellente configuration !** Vous avez fait les bons choix."
     
-    # Comparaison
-    elif "comparer" in question or "macbook" in question or "dell" in question or "lenovo" in question:
+    # === COMPARAISON ===
+    elif "comparer" in question or "macbook" in question or "dell" in question:
         return f"🔍 **Comparaison** : Votre PC à {price_eur:,.0f} € (perf {performance}/100) se situe dans le {category}. Un MacBook Air M2 équivalent coûte ~1200€ (perf ~75/100)."
     
-    # Aide générale
-    elif "aide" in question or "que faire" in question:
-        return "🤖 **Je peux vous aider sur :**\n• RAM, CPU, Poids, Performance, Prix\n• Recommandations pour améliorer la config\n• Comparaisons avec d'autres PC"
-    
+    # === GAMING ===
     elif "gaming" in question or "jeu" in question:
         if ram >= 16 and cpu >= 3.0:
             return "🎮 **Gaming** : Cette config est parfaite pour jouer ! Vous pourrez faire tourner la plupart des jeux récents."
         else:
             return "🎮 **Gaming** : Pour une meilleure expérience, je recommande au moins 16 Go de RAM et un CPU à 3.0 GHz+."
     
+    # === MONTAGE VIDÉO ===
     elif "montage" in question or "vidéo" in question:
         if ram >= 16 and cpu >= 3.0:
             return "🎬 **Montage vidéo** : Cette config est adaptée pour du montage 1080p/4K léger !"
         else:
             return "🎬 **Montage vidéo** : Pour du montage confortable, visez 16 Go de RAM et un CPU rapide."
     
+    # === BUREAUTIQUE ===
     elif "bureautique" in question or "travail" in question:
         return "💼 **Bureautique** : Cette config est parfaitement adaptée pour Word, Excel, navigation web et visioconférence."
     
+    # === RÉPONSE PAR DÉFAUT ===
     else:
-        return "🤖 **Posez-moi une question sur :** RAM, CPU, poids, performance, prix, gaming, montage vidéo, ou demandez une recommandation !"
+        return """🤖 **Je peux vous aider sur :**
+
+• **Composants :** RAM, CPU, Poids, Performance
+• **Prix :** Prix actuel, Fourchette de prix, Prix moyen
+• **Achat :** Budget, Recommandations, Comparaisons
+• **Usage :** Gaming, Montage vidéo, Bureautique, Étudiant
+
+📌 **Exemples de questions :**
+- "Meilleur ordi pour étudiant ?"
+- "Prix varie de combien à combien ?"
+- "Prix moyen d'un PC ?"
+- "Budget 800€, quoi acheter ?" """
 
 # ==========================================
 # 14. OUTPUT COLONNE DROITE

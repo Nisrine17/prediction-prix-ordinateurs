@@ -1,4 +1,4 @@
-genre je le remplace par ça import joblib
+import joblib
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
